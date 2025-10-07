@@ -22,6 +22,11 @@ function Router() {
       const newPath = path.split("/?/")[1].replace(/~and~/g, "&");
       setLocation(newPath);
     }
+
+    // Handle direct navigation to GitHub Pages
+    if (path === "/ShopifyStore_Client/" || path === "/ShopifyStore_Client") {
+      setLocation("/");
+    }
   }, [setLocation]);
 
   return (

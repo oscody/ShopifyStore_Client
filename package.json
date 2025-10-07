@@ -9,7 +9,7 @@
     "build": "vite build",
     "preview": "vite preview",
     "check": "tsc --noEmit",
-    "build:gh-pages": "NODE_ENV=production vite build",
+    "build:gh-pages": "NODE_ENV=production VITE_BASE_URL=/ShopifyStore_Client/ vite build",
     "preview:gh-pages": "vite preview"
   },
   "dependencies": {
