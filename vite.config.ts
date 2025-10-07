@@ -22,4 +22,5 @@ export default defineConfig({
     outDir: "dist",
     emptyOutDir: true,
   },
+  base: process.env.NODE_ENV === "production" ? "/ShopifyStore_Client/" : "/",
 });
