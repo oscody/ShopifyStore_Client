@@ -34,6 +34,7 @@ jobs:
         env:
           NODE_ENV: production
           VITE_BASE_URL: /ShopifyStore_Client/
+          VITE_API_URL: https://shopifystore-server.onrender.com
 
       - name: Copy .nojekyll to dist
         run: cp .nojekyll dist/

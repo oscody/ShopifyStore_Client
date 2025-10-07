@@ -1,4 +1,5 @@
 import { QueryClient, QueryFunction } from "@tanstack/react-query";
+import { getApiUrl } from "./api";
 
 async function throwIfResNotOk(res: Response) {
   if (!res.ok) {
@@ -12,7 +13,8 @@ export async function apiRequest(
   url: string,
   data?: unknown | undefined
 ): Promise<Response> {
-  const res = await fetch(url, {
+  const fullUrl = getApiUrl(url);
+  const res = await fetch(fullUrl, {
     method,
     headers: data ? { "Content-Type": "application/json" } : {},
     body: data ? JSON.stringify(data) : undefined,
@@ -48,7 +50,8 @@ export const getQueryFn: <T>(options: {
       }
     }
 
-    const res = await fetch(url, {
+    const fullUrl = getApiUrl(url);
+    const res = await fetch(fullUrl, {
       credentials: "include",
     });
 
@@ -65,7 +68,8 @@ export const queryClient = new QueryClient({
     queries: {
       queryFn: async ({ queryKey }) => {
         const url = Array.isArray(queryKey) ? queryKey[0] : queryKey;
-        const response = await fetch(url as string);
+        const fullUrl = getApiUrl(url as string);
+        const response = await fetch(fullUrl);
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
