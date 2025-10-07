@@ -1,4 +1,4 @@
-# Shopify Storefront - Frontend
+# ShopifyStore_Client
 
 React frontend for the Shopify Storefront application.
 
