@@ -12,7 +12,7 @@ permissions:
 
 concurrency:
   group: "pages"
-  cancel-in-progress: false
+  cancel-in-progress: true
 
 jobs:
   build:
@@ -32,6 +32,11 @@ jobs:
         run: |
           cd client
           npm ci
+
+      - name: Clean previous artifacts
+        run: |
+          # Clean up any previous build artifacts
+          rm -rf client/dist
 
       - name: Build for GitHub Pages
         run: |
