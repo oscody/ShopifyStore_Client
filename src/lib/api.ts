@@ -1,5 +1,9 @@
 // API configuration for both development and production
-const API_BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:3001";
+const API_BASE_URL =
+  import.meta.env.VITE_API_URL ||
+  (import.meta.env.DEV
+    ? "http://localhost:3001"
+    : "https://shopifystore-server.onrender.com");
 
 export function getApiUrl(path: string): string {
   // If path already starts with http, return as is
