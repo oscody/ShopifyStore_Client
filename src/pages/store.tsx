@@ -5,6 +5,7 @@ import { ProductCard } from "@/components/product-card";
 import { CartSidebar } from "@/components/cart-sidebar";
 import { useToast } from "@/hooks/use-toast";
 import { useLocation } from "wouter";
+import { getApiUrl } from "@/lib/api";
 
 export default function Store() {
   const [, setLocation] = useLocation();
@@ -27,7 +28,7 @@ export default function Store() {
 
   useEffect(() => {
     // Fetch products
-    fetch("/api/products")
+    fetch(getApiUrl("/api/products"))
       .then((res) => res.json())
       .then((data) => {
         setProductsData(data);
@@ -39,7 +40,7 @@ export default function Store() {
       });
 
     // Fetch categories
-    fetch("/api/categories")
+    fetch(getApiUrl("/api/categories"))
       .then((res) => res.json())
       .then((data) => {
         setCategories(data);
