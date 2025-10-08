@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Product } from "../types/api";
 import { CartItem } from "@/lib/types";
 
@@ -7,6 +8,8 @@ interface ProductCardProps {
 }
 
 export function ProductCard({ product, onAddToCart }: ProductCardProps) {
+  const [justAdded, setJustAdded] = useState(false);
+
   const displayPrice = product.salePrice || product.price;
   const hasDiscount = !!product.salePrice;
   const discountPercent = hasDiscount
@@ -28,6 +31,10 @@ export function ProductCard({ product, onAddToCart }: ProductCardProps) {
         "https://images.unsplash.com/photo-1560472354-b33ff0c44a43?w=400",
       sku: product.sku,
     });
+
+    // Show temporary "Added!" feedback
+    setJustAdded(true);
+    setTimeout(() => setJustAdded(false), 2000);
   };
 
   return (
@@ -60,9 +67,21 @@ export function ProductCard({ product, onAddToCart }: ProductCardProps) {
           <button
             onClick={handleAddToCart}
             data-testid={`button-add-to-cart-${product.id}`}
-            className="absolute bottom-3 left-1/2 transform -translate-x-1/2 translate-y-12 group-hover:translate-y-0 transition-all bg-primary text-primary-foreground px-6 py-2 rounded-lg font-medium opacity-0 group-hover:opacity-100"
+            className={`absolute bottom-3 left-1/2 transform -translate-x-1/2 translate-y-12 group-hover:translate-y-0 transition-all px-6 py-2 rounded-lg font-medium opacity-0 group-hover:opacity-100 ${
+              justAdded
+                ? "bg-green-500 text-white translate-y-0 opacity-100"
+                : "bg-primary text-primary-foreground"
+            }`}
           >
-            <i className="fas fa-cart-plus mr-2"></i>Add to Cart
+            {justAdded ? (
+              <>
+                <i className="fas fa-check mr-2"></i>Added!
+              </>
+            ) : (
+              <>
+                <i className="fas fa-cart-plus mr-2"></i>Add to Cart
+              </>
+            )}
           </button>
         ) : (
           <div className="absolute bottom-3 left-1/2 transform -translate-x-1/2 translate-y-12 group-hover:translate-y-0 transition-all bg-muted text-muted-foreground px-6 py-2 rounded-lg font-medium opacity-0 group-hover:opacity-100">

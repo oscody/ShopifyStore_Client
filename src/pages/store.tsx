@@ -27,6 +27,7 @@ export default function Store() {
   const [categories, setCategories] = useState<Category[]>([]);
   const [categoriesError, setCategoriesError] = useState<Error | null>(null);
   const [isFiltering, setIsFiltering] = useState(false);
+  const [cartAnimation, setCartAnimation] = useState(false);
 
   // Debounce search term to avoid excessive API calls
   const debouncedSearchTerm = useDebounce(searchTerm, 300);
@@ -90,9 +91,22 @@ export default function Store() {
       return [...prev, item];
     });
 
+    // Trigger cart icon animation
+    setCartAnimation(true);
+    setTimeout(() => setCartAnimation(false), 600);
+
+    // Show success toast with action button
     toast({
-      title: "Added to cart",
+      title: "✓ Added to cart",
       description: `${item.name} has been added to your cart`,
+      action: (
+        <button
+          onClick={() => setIsCartOpen(true)}
+          className="bg-primary text-primary-foreground px-3 py-1 rounded-md text-sm font-medium hover:opacity-90"
+        >
+          View Cart
+        </button>
+      ),
     });
   };
 
@@ -169,12 +183,20 @@ export default function Store() {
               <button
                 onClick={() => setIsCartOpen(true)}
                 data-testid="button-open-cart"
-                className="relative text-muted-foreground hover:text-primary transition-all"
+                className={`relative text-muted-foreground hover:text-primary transition-all ${
+                  cartAnimation ? "animate-bounce" : ""
+                }`}
               >
-                <i className="fas fa-shopping-cart text-lg"></i>
+                <i
+                  className={`fas fa-shopping-cart text-lg ${
+                    cartAnimation ? "text-primary scale-125" : ""
+                  }`}
+                ></i>
                 {cartItemCount > 0 && (
                   <span
-                    className="absolute -top-2 -right-2 bg-accent text-accent-foreground text-xs rounded-full w-5 h-5 flex items-center justify-center font-semibold"
+                    className={`absolute -top-2 -right-2 bg-accent text-accent-foreground text-xs rounded-full w-5 h-5 flex items-center justify-center font-semibold transition-all ${
+                      cartAnimation ? "scale-125" : ""
+                    }`}
                     data-testid="text-cart-count"
                   >
                     {cartItemCount}
