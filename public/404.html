@@ -3,38 +3,61 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Redirecting...</title>
-    <script>
-      // GitHub Pages SPA redirect
-      // Redirect to the base path and let React Router handle the routing
-      var pathSegmentsToKeep = 1;
-      var l = window.location;
-      var basePath = l.pathname
-        .split("/")
-        .slice(0, 1 + pathSegmentsToKeep)
-        .join("/");
-      var redirectPath =
-        basePath +
-        "/?/" +
-        l.pathname
-          .slice(1)
-          .split("/")
-          .slice(pathSegmentsToKeep)
-          .join("/")
-          .replace(/&/g, "~and~");
-
-      if (l.search) {
-        redirectPath += "&" + l.search.slice(1).replace(/&/g, "~and~");
+    <title>Page Not Found - ShopHub</title>
+    <style>
+      body {
+        margin: 0;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto",
+          "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans",
+          "Helvetica Neue", sans-serif;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
       }
-
-      if (l.hash) {
-        redirectPath += l.hash;
+      .container {
+        text-align: center;
+        padding: 2rem;
       }
-
-      l.replace(redirectPath);
-    </script>
+      h1 {
+        font-size: 6rem;
+        margin: 0;
+        font-weight: bold;
+      }
+      h2 {
+        font-size: 2rem;
+        margin: 1rem 0;
+      }
+      p {
+        font-size: 1.2rem;
+        margin: 1rem 0 2rem;
+        opacity: 0.9;
+      }
+      a {
+        display: inline-block;
+        padding: 1rem 2rem;
+        background: white;
+        color: #667eea;
+        text-decoration: none;
+        border-radius: 8px;
+        font-weight: 600;
+        transition: transform 0.2s;
+      }
+      a:hover {
+        transform: scale(1.05);
+      }
+    </style>
   </head>
   <body>
-    <p>Redirecting...</p>
+    <div class="container">
+      <h1>404</h1>
+      <h2>Page Not Found</h2>
+      <p>The page you're looking for doesn't exist.</p>
+      <a href="/">Go Back Home</a>
+    </div>
   </body>
 </html>
