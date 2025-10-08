@@ -3,14 +3,11 @@
   "version": "1.0.0",
   "type": "module",
   "license": "MIT",
-  "homepage": "https://oscody.github.io/ShopifyStore_Client",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
-    "check": "tsc --noEmit",
-    "build:gh-pages": "NODE_ENV=production VITE_BASE_URL=/ShopifyStore_Client/ vite build",
-    "preview:gh-pages": "vite preview"
+    "check": "tsc --noEmit"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.10.0",
