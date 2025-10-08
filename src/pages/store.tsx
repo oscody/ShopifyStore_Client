@@ -148,18 +148,18 @@ export default function Store() {
               <h1 className="text-2xl font-bold text-primary">ShopHub</h1>
               <nav className="hidden md:flex gap-6">
                 <a
-                  href="#"
+                  href="/"
                   className="text-foreground hover:text-primary transition-all font-medium"
                 >
                   Shop
                 </a>
                 <a
-                  href="#"
+                  href="/collections"
                   className="text-muted-foreground hover:text-primary transition-all"
                 >
                   Collections
                 </a>
-                <a
+                {/* <a
                   href="#"
                   className="text-muted-foreground hover:text-primary transition-all"
                 >
@@ -170,7 +170,7 @@ export default function Store() {
                   className="text-muted-foreground hover:text-primary transition-all"
                 >
                   Contact
-                </a>
+                </a> */}
               </nav>
             </div>
             <div className="flex items-center gap-4">
