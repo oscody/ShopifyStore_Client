@@ -6,6 +6,7 @@ import { CartSidebar } from "@/components/cart-sidebar";
 import { useToast } from "@/hooks/use-toast";
 import { useLocation } from "wouter";
 import { getApiUrl } from "@/lib/api";
+import { useDebounce } from "@/hooks/use-debounce";
 
 export default function Store() {
   const [, setLocation] = useLocation();
@@ -25,29 +26,55 @@ export default function Store() {
   const [productsError, setProductsError] = useState<Error | null>(null);
   const [categories, setCategories] = useState<Category[]>([]);
   const [categoriesError, setCategoriesError] = useState<Error | null>(null);
+  const [isFiltering, setIsFiltering] = useState(false);
 
+  // Debounce search term to avoid excessive API calls
+  const debouncedSearchTerm = useDebounce(searchTerm, 300);
+
+  // Fetch products with filters
   useEffect(() => {
-    // Fetch products
-    fetch(getApiUrl("/api/products"))
-      .then((res) => res.json())
-      .then((data) => {
-        setProductsData(data);
-        setProductsLoading(false);
-      })
-      .catch((err) => {
-        setProductsError(err);
-        setProductsLoading(false);
-      });
+    const fetchProducts = async () => {
+      setProductsLoading(true);
+      setIsFiltering(true);
+      try {
+        const params = new URLSearchParams();
+        if (debouncedSearchTerm) params.append("search", debouncedSearchTerm);
+        if (selectedCategory) params.append("category", selectedCategory);
+        if (sortBy) params.append("sort", sortBy);
 
-    // Fetch categories
-    fetch(getApiUrl("/api/categories"))
-      .then((res) => res.json())
-      .then((data) => {
+        const response = await fetch(
+          getApiUrl(`/api/products?${params.toString()}`)
+        );
+        const data = await response.json();
+        setProductsData(data);
+        setProductsError(null);
+      } catch (err) {
+        setProductsError(err as Error);
+        console.error("Error fetching products:", err);
+      } finally {
+        setProductsLoading(false);
+        setIsFiltering(false);
+      }
+    };
+
+    fetchProducts();
+  }, [debouncedSearchTerm, selectedCategory, sortBy]);
+
+  // Fetch categories once on mount
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const response = await fetch(getApiUrl("/api/categories"));
+        const data = await response.json();
         setCategories(data);
-      })
-      .catch((err) => {
-        setCategoriesError(err);
-      });
+        setCategoriesError(null);
+      } catch (err) {
+        setCategoriesError(err as Error);
+        console.error("Error fetching categories:", err);
+      }
+    };
+
+    fetchCategories();
   }, []);
 
   const addToCart = (item: CartItem) => {
@@ -88,6 +115,14 @@ export default function Store() {
   };
 
   const cartItemCount = cartItems.reduce((sum, item) => sum + item.quantity, 0);
+
+  const clearFilters = () => {
+    setSearchTerm("");
+    setSelectedCategory("");
+    setSortBy("");
+  };
+
+  const hasActiveFilters = searchTerm || selectedCategory || sortBy;
 
   return (
     <div className="min-h-screen bg-background">
@@ -219,6 +254,15 @@ export default function Store() {
                 <option value="newest">Newest First</option>
                 <option value="popular">Best Selling</option>
               </select>
+              {hasActiveFilters && (
+                <button
+                  onClick={clearFilters}
+                  data-testid="button-clear-filters"
+                  className="px-4 py-3 border border-input rounded-lg hover:bg-secondary transition-all text-sm font-medium text-muted-foreground hover:text-foreground"
+                >
+                  Clear Filters
+                </button>
+              )}
             </div>
           </div>
         </div>
@@ -228,9 +272,19 @@ export default function Store() {
       <section className="py-12 bg-secondary/30">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between mb-8">
-            <h3 className="text-3xl font-bold text-foreground">
-              Featured Products
-            </h3>
+            <div className="flex items-center gap-4">
+              <h3 className="text-3xl font-bold text-foreground">
+                {searchTerm || selectedCategory || sortBy
+                  ? "Search Results"
+                  : "Featured Products"}
+              </h3>
+              {isFiltering && (
+                <div className="flex items-center gap-2 text-muted-foreground">
+                  <div className="animate-spin w-4 h-4 border-2 border-primary border-t-transparent rounded-full"></div>
+                  <span className="text-sm">Filtering...</span>
+                </div>
+              )}
+            </div>
             <span
               className="text-muted-foreground"
               data-testid="text-products-count"
